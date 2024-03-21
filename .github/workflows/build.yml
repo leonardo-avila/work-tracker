@@ -1,0 +1,61 @@
+name: build
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: development
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+      
+      - name: Restore dependencies
+        run: dotnet restore
+      
+      - name: Build
+        run: dotnet build
+
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+      
+      - name: Configure AWS credentials
+        continue-on-error: true
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.LAB_ACCOUNT_REGION }}
+
+      - name: Setup Terraform
+        continue-on-error: true
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.7
+
+      - name: Terraform Init
+        continue-on-error: true
+        run: terraform init
+        working-directory: ./infra/terraform
+  
+      - name: Terraform Plan
+        continue-on-error: true
+        run: terraform plan
+        working-directory: ./infra/terraform
+        env:
+          TF_VAR_lab_account_id: ${{ secrets.LAB_ACCOUNT_ID }}
+          TF_VAR_lab_account_region: ${{ secrets.LAB_ACCOUNT_REGION }}
+          TF_VAR_work_tracker_image: ${{ secrets.WORKTRACKER_IMAGE }}
+          TF_VAR_mysql_password: ${{ secrets.MYSQL_PASSWORD }}
+          TF_VAR_mysql_user: ${{ secrets.MYSQL_USER }}

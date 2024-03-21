@@ -1,0 +1,34 @@
+version: "1.0"
+
+services:
+    worktracker-database:
+        image: mysql:8.0.33
+        environment:
+            MYSQL_ROOT_PASSWORD: StRoNg_PaSsWoRd
+            MYSQL_DATABASE: worktracker
+            MYSQL_USER: user
+            MYSQL_PASSWORD: uSeRpAsSwOrD
+        ports:
+            - "3306:3306"
+        container_name: worktracker-database
+        networks:
+            - worktracker-network
+    worktracker-api:
+        build:
+          context: ../../src/
+          dockerfile: Dockerfile
+        ports:
+            - "3000:80"
+        environment:
+            ConnectionStrings__DefaultConnection: "Server=worktracker-database;Port=3306;Database=worktracker;Uid=user;Pwd=uSeRpAsSwOrD"
+        depends_on:
+            - worktracker-database
+        networks:
+            - worktracker-network
+        restart: always
+networks:
+    worktracker-network:
+        driver: bridge
+
+    
+    
