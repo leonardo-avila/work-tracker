@@ -13,19 +13,25 @@ namespace WorkTracker.Clock.UseCase.UseCases
 		private readonly IPunchesRepository _punchRepository;
 		private readonly IEmployeeRepository _employeeRepository;
 		private readonly IPunchService _punchService;
+		private readonly IEmployeeService _employeeService;
 
         public PunchUseCases(IPunchesRepository punchRepository,
 			IEmployeeRepository employeeRepository,
-			IPunchService punchService)
+			IPunchService punchService,
+			IEmployeeService employeeService)
 		{
 			_punchRepository = punchRepository;
 			_employeeRepository = employeeRepository;
 			_punchService = punchService;
+			_employeeService = employeeService;
         }
 
 		public async Task<DailyPunchesViewModel> GetPunches(string rm)
 		{
-			var punches = await _punchRepository.GetPunches(rm);
+			var employeeHash = _employeeService.GenerateEmployeeHash(rm);
+			var employee = await _employeeRepository.GetEmployee(employeeHash) ?? throw new DomainException("Invalid rm.");
+
+			var punches = await _punchRepository.GetPunches(employeeHash);
 			if (punches is null || !punches.Any())
 			{
 				throw new DomainException("No punches found.");
@@ -36,7 +42,7 @@ namespace WorkTracker.Clock.UseCase.UseCases
 				Punches = punches.Select(p => new OutputPunchViewModel
 				{
 					PunchType = p.Type.ToString(),
-					Timestamp = p.Timestamp,
+					Timestamp = p.GetTimestamp(),
 					IsApproved = p.IsApproved
 				})
 			};
@@ -44,21 +50,24 @@ namespace WorkTracker.Clock.UseCase.UseCases
 
 		public async Task<MonthlyPunchesViewModel> GetMonthlyPunches(string rm)
 		{
-			var punches = await _punchRepository.GetMonthlyPunches(rm);
+			var employeeHash = _employeeService.GenerateEmployeeHash(rm);
+			var employee = await _employeeRepository.GetEmployee(employeeHash) ?? throw new DomainException("Invalid rm.");
+
+			var punches = await _punchRepository.GetMonthlyPunches(employeeHash);
 			
 			if (punches is null || !punches.Any())
 			{
 				throw new DomainException("No punches found.");
 			}
 
-			var dailyPunches = punches.GroupBy(p => p.Timestamp.Date)
+			var dailyPunches = punches.GroupBy(p => p.GetTimestamp().Date)
 				.Select(g => new DailyPunchesViewModel
 				{
 				  TotalWorkedHours = _punchService.CalculateTotalWorkedHours(g.ToList()),
 				  Punches = g.Select(p => new OutputPunchViewModel
 				  {
 					  PunchType = p.Type.ToString(),
-					  Timestamp = p.Timestamp,
+					  Timestamp = p.GetTimestamp(),
 					  IsApproved = p.IsApproved
 				  })
 				})
@@ -72,9 +81,10 @@ namespace WorkTracker.Clock.UseCase.UseCases
 
 		public async Task<OutputPunchViewModel> Punch(string rm)
 		{
-			var employee = await _employeeRepository.GetEmployee(rm) ?? throw new DomainException("Invalid rm.");
+			var employeeHash = _employeeService.GenerateEmployeeHash(rm);
+			var employee = await _employeeRepository.GetEmployee(employeeHash) ?? throw new DomainException("Invalid rm.");
 
-            var punches = await _punchRepository.GetPunches(rm);
+            var punches = await _punchRepository.GetPunches(employeeHash);
 			var punchType = punches.Count() % 2 == 0 ? PunchType.In : PunchType.Out;
 
 			var punch = new Punch(punchType, employee.Hash);
@@ -91,7 +101,7 @@ namespace WorkTracker.Clock.UseCase.UseCases
 			return new OutputPunchViewModel
 			{
 				PunchType = punch.Type.ToString(),
-				Timestamp = punch.Timestamp,
+				Timestamp = punch.GetTimestamp(),
 				IsApproved = punch.IsApproved
 			};
 		}

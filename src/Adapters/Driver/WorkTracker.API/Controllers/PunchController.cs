@@ -28,8 +28,7 @@ public class PunchController : ControllerBase
     /// <response code="400">Invalid rm.</response>
     /// <response code="404">No punches found for the specified rm.</response>
     /// <response code="500">An error occurred while processing your request.</response>
-    [HttpGet(Name = "Get punches of the day")]
-    [Route("/{rm}")]
+    [HttpGet("{rm}", Name = "Get punches of the day")]
     public async Task<ActionResult<DailyPunchesViewModel>> GetPunches(string rm)
     {
         try 
@@ -58,8 +57,7 @@ public class PunchController : ControllerBase
     /// <response code="200">Successfully punched.</response>
     /// <response code="400">Invalid rm.</response>
     /// <response code="500">An error occurred while processing your request.</response>
-    [HttpPost(Name = "Punch in or out")]
-    [Route("/{rm}")]
+    [HttpPost("{rm}", Name = "Punch in or out")]
     public async Task<ActionResult<OutputPunchViewModel>> Punch(string rm)
     {
         try 

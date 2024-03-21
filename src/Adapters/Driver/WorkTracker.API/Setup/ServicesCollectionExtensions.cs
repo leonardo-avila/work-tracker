@@ -17,12 +17,16 @@ namespace Microsoft.Extensions.DependencyInjection
             this IServiceCollection services)
         {
             services.AddScoped<IPunchesRepository, PunchesRepository>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
             services.AddScoped<IPunchUseCases, PunchUseCases>();
+            services.AddScoped<IEmployeeUseCase, EmployeeUseCase>();
 
             services.AddScoped<IPunchService, PunchService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
 
             services.AddScoped<IValidator<Punch>, PunchValidator>();
+            services.AddScoped<IValidator<Employee>, EmployeeValidator>();
 
             return services;
         }

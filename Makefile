@@ -6,3 +6,6 @@ run-api:
 
 drop-api:
 	cd infra/local; docker-compose down worktracker-api;
+
+run-debug:
+	cd src/adapters/driver/worktracker.api; dotnet run;

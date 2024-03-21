@@ -28,8 +28,7 @@ public class ReportsController : ControllerBase
     /// <response code="400">Invalid rm.</response>
     /// <response code="404">No punches found for the specified rm.</response>
     /// <response code="500">An error occurred while processing your request.</response>
-    [HttpGet(Name = "Get punches of the month")]
-    [Route("reports/{rm}")]
+    [HttpGet("{rm}", Name = "Get punches of the month")]
     public async Task<ActionResult<MonthlyPunchesViewModel>> GetMonthlyReport(string rm)
     {
         try 

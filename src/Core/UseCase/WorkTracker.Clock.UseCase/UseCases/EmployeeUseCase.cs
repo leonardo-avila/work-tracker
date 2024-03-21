@@ -6,7 +6,7 @@ using WorkTracker.Clock.UseCase.Ports;
 
 namespace WorkTracker.Clock.UseCase.UseCases
 {
-    public class EmployeeUseCase : IEmployeeUseCases
+    public class EmployeeUseCase : IEmployeeUseCase
     {
         private readonly IEmployeeService _employeeService;
         private readonly IEmployeeRepository _employeeRepository;

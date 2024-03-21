@@ -1,6 +1,9 @@
 using System.Text.Json.Serialization;
 using WorkTracker.API.Setup;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
+using WorkTracker.Gateways.MySQL.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,14 +31,21 @@ builder.Services.AddSwaggerGen(c =>
 {
     // Configure Swagger options
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Work Tracker API", Version = "v1" });
-    var filePath = Path.Combine(AppContext.BaseDirectory, "WorkTracker.API.xml");
-    c.IncludeXmlComments(filePath);
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
 });
 
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
 builder.Services.AddClockServices();
 
 var app = builder.Build();
+
+using (var serviceScope = app.Services.CreateScope())
+{
+    var catalogContext = serviceScope.ServiceProvider.GetService<ClockContext>();
+    catalogContext!.Database.Migrate();
+}
 
 app.Use(async (context, next) =>
 {

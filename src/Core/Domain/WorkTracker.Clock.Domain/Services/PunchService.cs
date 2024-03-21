@@ -32,14 +32,14 @@ namespace WorkTracker.Clock.Domain.Services
 
         public TimeSpan CalculateTotalWorkedHours(IEnumerable<Punch> punches)
         {
-            var orderedPunches = punches.OrderBy(p => p.Timestamp).ToList();
+            var orderedPunches = punches.OrderBy(p => p.GetTimestamp()).ToList();
             var totalWorkedHours = new TimeSpan();
 
             for (var i = 0; i < orderedPunches.Count; i += 2)
             {
                 if (i + 1 < orderedPunches.Count)
                 {
-                    totalWorkedHours += orderedPunches[i + 1].Timestamp - orderedPunches[i].Timestamp;
+                    totalWorkedHours += orderedPunches[i + 1].GetTimestamp() - orderedPunches[i].GetTimestamp();
                 }
             }
 

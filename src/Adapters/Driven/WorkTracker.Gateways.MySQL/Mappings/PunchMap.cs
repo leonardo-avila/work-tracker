@@ -27,8 +27,7 @@ namespace WorkTracker.Gateways.MySQL.Mappings
                 .IsRequired();
 
             builder.Property(f => f.UpdatedTimestamp)
-                .HasColumnName("UpdatedTimestamp")
-                .IsRequired();
+                .HasColumnName("UpdatedTimestamp");
 
             builder.Property(f => f.IsApproved)
                 .HasColumnName("IsApproved")

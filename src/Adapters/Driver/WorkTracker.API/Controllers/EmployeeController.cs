@@ -10,14 +10,13 @@ namespace WorkTracker.API.Controllers;
 public class EmployeeController : ControllerBase
 {
     private readonly ILogger<EmployeeController> _logger;
-    private readonly IEmployeeUseCases _employeeUseCases;
+    private readonly IEmployeeUseCase _employeeUseCases;
 
-    public EmployeeController(ILogger<EmployeeController> logger, IEmployeeUseCases employeeUseCases)
+    public EmployeeController(ILogger<EmployeeController> logger, IEmployeeUseCase employeeUseCases)
     {
         _logger = logger;
         _employeeUseCases = employeeUseCases;
     }
-
 
     /// <summary>
     /// Add a new employee to the system
@@ -27,8 +26,7 @@ public class EmployeeController : ControllerBase
     /// <response code="400">Invalid rm.</response>
     /// <response code="404">No employeees found for the specified rm.</response>
     /// <response code="500">An error occurred while processing your request.</response>
-    [HttpGet(Name = "Add a new employee")]
-    [Route("")]
+    [HttpPost(Name = "Add a new employee")]
     public async Task<ActionResult<EmployeeViewModel>> AddEmployee(EmployeeViewModel employeeViewModel)
     {
         try 

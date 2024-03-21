@@ -6,21 +6,7 @@ namespace WorkTracker.Clock.Domain.Models
     public class Punch : Entity
     {
         public string EmployeeHash { get; private set; }
-        public DateTime Timestamp
-        {
-            get
-            {
-                if (UpdatedTimestamp != null && IsApproved)
-                {
-                    return UpdatedTimestamp.Value;
-                }
-                else
-                {
-                    return Timestamp;
-                }
-            }
-            private set { }
-        }
+        public DateTime Timestamp { get; private set; }
         public DateTime? UpdatedTimestamp { get; private set; }
         public PunchType Type { get; private set; }
         public bool IsApproved { get; private set; }
@@ -41,6 +27,18 @@ namespace WorkTracker.Clock.Domain.Models
         public void Approve()
         {
             IsApproved = true;
+        }
+
+        public DateTime GetTimestamp() 
+        {
+            if (UpdatedTimestamp != null && IsApproved)
+            {
+                return UpdatedTimestamp.Value;
+            }
+            else
+            {
+                return Timestamp;
+            }
         }
     }
 }
