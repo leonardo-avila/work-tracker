@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WorkTracker.Clock.UseCase.OutputViewModels;
 using WorkTracker.Clock.UseCase.Ports;
@@ -7,6 +8,7 @@ namespace WorkTracker.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize("Bearer")]
 public class ReportsController : ControllerBase
 {
     private readonly ILogger<ReportsController> _logger;
@@ -22,18 +24,18 @@ public class ReportsController : ControllerBase
     /// <summary>
     /// Get current day work punches for the specified employee
     /// </summary>
-    /// <param name="rm">Represents the employee rm to retrieve the punches</param>
     /// <returns>Returns the respective punches</returns>
     /// <response code="200">Successfully retrieved punches.</response>
     /// <response code="400">Invalid rm.</response>
     /// <response code="404">No punches found for the specified rm.</response>
     /// <response code="500">An error occurred while processing your request.</response>
-    [HttpGet("{rm}", Name = "Get punches of the month")]
-    public async Task<ActionResult<MonthlyPunchesViewModel>> GetMonthlyReport(string rm)
+    [HttpGet(Name = "Get punches of the month")]
+    public async Task<ActionResult<MonthlyPunchesViewModel>> GetMonthlyReport()
     {
         try 
         {
-            var punches = await _punchUseCases.GetMonthlyPunches(rm);
+            var rm = User.FindFirst("nickname")?.Value;
+            var punches = await _punchUseCases.GetMonthlyPunches(rm!);
             if (punches is null) {
                 return NoContent();
             }

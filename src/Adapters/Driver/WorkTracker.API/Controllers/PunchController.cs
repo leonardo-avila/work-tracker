@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WorkTracker.Clock.UseCase.OutputViewModels;
 using WorkTracker.Clock.UseCase.Ports;
@@ -7,6 +8,7 @@ namespace WorkTracker.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize("Bearer")]
 public class PunchController : ControllerBase
 {
     private readonly ILogger<PunchController> _logger;
@@ -22,18 +24,18 @@ public class PunchController : ControllerBase
     /// <summary>
     /// Get current day work punches for the specified employee
     /// </summary>
-    /// <param name="rm">Represents the employee rm to retrieve the punches</param>
     /// <returns>Returns the respective punches</returns>
     /// <response code="200">Successfully retrieved punches.</response>
     /// <response code="400">Invalid rm.</response>
     /// <response code="404">No punches found for the specified rm.</response>
     /// <response code="500">An error occurred while processing your request.</response>
-    [HttpGet("{rm}", Name = "Get punches of the day")]
-    public async Task<ActionResult<DailyPunchesViewModel>> GetPunches(string rm)
+    [HttpGet(Name = "Get punches of the day")]
+    public async Task<ActionResult<DailyPunchesViewModel>> GetPunches()
     {
         try 
         {
-            var punches = await _punchUseCases.GetPunches(rm);
+            var employeeRM = User.FindFirst("nickname")?.Value;
+            var punches = await _punchUseCases.GetPunches(employeeRM!);
             if (punches is null) {
                 return NoContent();
             }
@@ -52,17 +54,17 @@ public class PunchController : ControllerBase
     /// <summary>
     /// Punch in the specified employee
     /// </summary>
-    /// <param name="rm">Represents the employee rm to punch in</param>
     /// <returns>Returns the respective punch</returns>
     /// <response code="200">Successfully punched.</response>
     /// <response code="400">Invalid rm.</response>
     /// <response code="500">An error occurred while processing your request.</response>
-    [HttpPost("{rm}", Name = "Punch in or out")]
-    public async Task<ActionResult<OutputPunchViewModel>> Punch(string rm)
+    [HttpPost(Name = "Punch in or out")]
+    public async Task<ActionResult<OutputPunchViewModel>> Punch()
     {
         try 
         {
-            var punch = await _punchUseCases.Punch(rm);
+            var employeeRM = User.FindFirst("nickname")?.Value;
+            var punch = await _punchUseCases.Punch(employeeRM!);
             return Ok(punch);
         }
         catch (DomainException ex) 

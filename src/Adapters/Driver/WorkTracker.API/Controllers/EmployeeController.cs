@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WorkTracker.Clock.UseCase.InputViewModels;
 using WorkTracker.Clock.UseCase.Ports;
@@ -7,6 +9,7 @@ namespace WorkTracker.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize("Bearer")]
 public class EmployeeController : ControllerBase
 {
     private readonly ILogger<EmployeeController> _logger;

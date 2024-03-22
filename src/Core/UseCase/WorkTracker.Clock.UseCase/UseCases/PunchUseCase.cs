@@ -64,7 +64,7 @@ namespace WorkTracker.Clock.UseCase.UseCases
 				.Select(g => new DailyPunchesViewModel
 				{
 				  TotalWorkedHours = _punchService.CalculateTotalWorkedHours(g.ToList()),
-				  Punches = g.Select(p => new OutputPunchViewModel
+				  Punches = g.OrderBy(p => p.GetTimestamp()).Select(p => new OutputPunchViewModel
 				  {
 					  PunchType = p.Type.ToString(),
 					  Timestamp = p.GetTimestamp(),
