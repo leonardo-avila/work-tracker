@@ -51,3 +51,18 @@ variable "cognito_idp_url" {
   description = "Cognito Idp Url"
   sensitive = true
 }
+
+variable "aws_access_key_id" {
+  description = "AWS access key ID"
+  sensitive = true
+}
+
+variable "aws_secret_access_key" {
+  description = "AWS secret access key"
+  sensitive = true
+}
+
+variable "aws_session_token" {
+  description = "AWS session token"
+  sensitive = true
+}

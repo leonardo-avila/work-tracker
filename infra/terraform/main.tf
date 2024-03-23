@@ -40,7 +40,7 @@ resource "aws_db_instance" "work-tracker-mysql" {
   identifier           = "work-tracker-db"
   allocated_storage    =  20
   engine_version       = "8.0.33"
-  instance_class       = "db.t2.micro"
+  instance_class       = "db.t3.micro"
   username             = var.mysql_user
   password             = var.mysql_password
   parameter_group_name = "work-tracker-mysql-parameter"
@@ -97,6 +97,18 @@ resource "aws_ecs_task_definition" "work-tracker-task" {
             {
                 "name": "Cognito__IdpUrl",
                 "value": var.cognito_idp_url
+            },
+            {
+                "name": "AWS_ACCESS_KEY_ID",
+                "value": var.aws_access_key_id
+            },
+            {
+                "name": "AWS_SECRET_ACCESS_KEY",
+                "value": var.aws_secret_access_key
+            },
+            {
+                "name": "AWS_SESSION_TOKEN",
+                "value": var.aws_session_token
             }
         ],
         "cpu": 256,
@@ -133,7 +145,7 @@ resource "aws_lb_target_group" "work-tracker-api-tg" {
 
 resource "aws_lb" "work-tracker-api-lb" {
   name               = "work-tracker-api"
-  internal           = true
+  internal           = false
   load_balancer_type = "application"
   subnets            = data.aws_subnets.default.ids
 }
