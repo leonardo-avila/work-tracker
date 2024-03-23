@@ -45,9 +45,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"leonardo-avila_food-totem-catalog" /o:"leonardo-avila" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.cs.opencover.reportsPaths="**\TestResults\*\*.xml"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"leonardo-avila_work-tracker" /o:"leonardo-avila" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.cs.opencover.reportsPaths="**\TestResults\*\*.xml"
           dotnet build ./src
-          dotnet test ./src --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
   deploy:
     runs-on: ubuntu-latest
