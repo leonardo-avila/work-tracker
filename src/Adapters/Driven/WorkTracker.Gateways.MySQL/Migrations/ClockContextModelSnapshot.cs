@@ -20,28 +20,6 @@ namespace WorkTracker.Gateways.MySQL.Migrations
                 .HasAnnotation("ProductVersion", "7.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("WorkTracker.Clock.Domain.Models.Employee", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)")
-                        .HasColumnName("Id");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("Email");
-
-                    b.Property<string>("Hash")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("Hash");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Employee", "Clock");
-                });
-
             modelBuilder.Entity("WorkTracker.Clock.Domain.Models.Punch", b =>
                 {
                     b.Property<Guid>("Id")

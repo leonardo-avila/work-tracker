@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WorkTracker.Clock.Domain.Ports;
 using WorkTracker.Clock.UseCase.OutputViewModels;
 using WorkTracker.Clock.UseCase.Ports;
 using WorkTracker.Domain.Core;
@@ -22,7 +23,7 @@ public class PunchController : ControllerBase
 
 
     /// <summary>
-    /// Get current day work punches for the specified employee
+    /// Get current day work punches
     /// </summary>
     /// <returns>Returns the respective punches</returns>
     /// <response code="200">Successfully retrieved punches.</response>
@@ -34,8 +35,8 @@ public class PunchController : ControllerBase
     {
         try 
         {
-            var employeeRM = User.FindFirst("nickname")?.Value;
-            var punches = await _punchUseCases.GetPunches(employeeRM!);
+            var rm = User.FindFirst("nickname")?.Value;
+            var punches = await _punchUseCases.GetPunches(rm!);
             if (punches is null) {
                 return NoContent();
             }
@@ -52,7 +53,7 @@ public class PunchController : ControllerBase
     }
 
     /// <summary>
-    /// Punch in the specified employee
+    /// Punch in or out
     /// </summary>
     /// <returns>Returns the respective punch</returns>
     /// <response code="200">Successfully punched.</response>
@@ -63,8 +64,8 @@ public class PunchController : ControllerBase
     {
         try 
         {
-            var employeeRM = User.FindFirst("nickname")?.Value;
-            var punch = await _punchUseCases.Punch(employeeRM!);
+            var rm = User.FindFirst("nickname")?.Value;
+            var punch = await _punchUseCases.Punch(rm!);
             return Ok(punch);
         }
         catch (DomainException ex) 

@@ -73,6 +73,30 @@ resource "aws_ecs_task_definition" "work-tracker-task" {
             {
                 "name": "ConnectionStrings__DefaultConnection",
                 "value": join("", ["Server=", element(split(":", aws_db_instance.work-tracker-mysql.endpoint), 0), ";Port=", local.port, ";Database=worktracker;Uid=", var.mysql_user, ";Pwd=", var.mysql_password, ";"])
+            },
+            {
+                "name": "Mailtrap__Host",
+                "value": var.mailtrap_host
+            },
+            {
+                "name": "Mailtrap__Username",
+                "value": var.mailtrap_username
+            },
+            {
+                "name": "Mailtrap__Password",
+                "value": var.mailtrap_password
+            },
+            {
+                "name": "Cognito__Authority",
+                "value": var.cognito_authority
+            },
+            {
+                "name": "Cognito__ClientId",
+                "value": var.cognito_client_id
+            },
+            {
+                "name": "Cognito__IdpUrl",
+                "value": var.cognito_idp_url
             }
         ],
         "cpu": 256,

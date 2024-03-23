@@ -6,6 +6,6 @@ namespace WorkTracker.Clock.UseCase.Ports
 	{
 		Task<DailyPunchesViewModel> GetPunches(string rm);
 		Task<OutputPunchViewModel> Punch(string rm);
-		Task<MonthlyPunchesViewModel> GetMonthlyPunches(string rm);
+		Task<MonthlyPunchesViewModel> GetMonthlyPunches(string rm, string email);
 	}
 }

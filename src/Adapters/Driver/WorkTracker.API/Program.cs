@@ -87,6 +87,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
 builder.Services.AddClockServices();
+builder.Services.AddComunicationServices(builder.Configuration);
 
 var app = builder.Build();
 

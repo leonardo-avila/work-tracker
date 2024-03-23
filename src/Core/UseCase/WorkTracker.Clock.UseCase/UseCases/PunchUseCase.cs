@@ -5,31 +5,33 @@ using WorkTracker.Clock.UseCase.OutputViewModels;
 using WorkTracker.Domain.Core;
 using WorkTracker.Clock.Domain.Models;
 using WorkTracker.Clock.Domain.Models.Enums;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace WorkTracker.Clock.UseCase.UseCases
 {
 	public class PunchUseCases : IPunchUseCases
 	{
 		private readonly IPunchesRepository _punchRepository;
-		private readonly IEmployeeRepository _employeeRepository;
 		private readonly IPunchService _punchService;
-		private readonly IEmployeeService _employeeService;
+		private readonly IUtilsService _utilsService;
+		private readonly IEmailNotificationService _emailNotificationService;
 
         public PunchUseCases(IPunchesRepository punchRepository,
-			IEmployeeRepository employeeRepository,
 			IPunchService punchService,
-			IEmployeeService employeeService)
+			IUtilsService utilsService,
+			IEmailNotificationService emailNotificationService)
 		{
 			_punchRepository = punchRepository;
-			_employeeRepository = employeeRepository;
 			_punchService = punchService;
-			_employeeService = employeeService;
+			_utilsService = utilsService;
+			_emailNotificationService = emailNotificationService;
         }
 
 		public async Task<DailyPunchesViewModel> GetPunches(string rm)
 		{
-			var employeeHash = _employeeService.GenerateEmployeeHash(rm);
-			var employee = await _employeeRepository.GetEmployee(employeeHash) ?? throw new DomainException("Invalid rm.");
+			var employeeHash = _utilsService.GenerateHash(rm);
 
 			var punches = await _punchRepository.GetPunches(employeeHash);
 			if (punches is null || !punches.Any())
@@ -48,10 +50,9 @@ namespace WorkTracker.Clock.UseCase.UseCases
 			};
 		}
 
-		public async Task<MonthlyPunchesViewModel> GetMonthlyPunches(string rm)
+		public async Task<MonthlyPunchesViewModel> GetMonthlyPunches(string rm, string email)
 		{
-			var employeeHash = _employeeService.GenerateEmployeeHash(rm);
-			var employee = await _employeeRepository.GetEmployee(employeeHash) ?? throw new DomainException("Invalid rm.");
+			var employeeHash = _utilsService.GenerateHash(rm);
 
 			var punches = await _punchRepository.GetMonthlyPunches(employeeHash);
 			
@@ -73,6 +74,8 @@ namespace WorkTracker.Clock.UseCase.UseCases
 				})
 				.ToList();
 
+			_emailNotificationService.SendMessageAsync(email, "Monthly Report", JsonSerializer.Serialize(dailyPunches));
+
 			return new MonthlyPunchesViewModel
 			{
 				DailyPunches = dailyPunches
@@ -81,13 +84,12 @@ namespace WorkTracker.Clock.UseCase.UseCases
 
 		public async Task<OutputPunchViewModel> Punch(string rm)
 		{
-			var employeeHash = _employeeService.GenerateEmployeeHash(rm);
-			var employee = await _employeeRepository.GetEmployee(employeeHash) ?? throw new DomainException("Invalid rm.");
+			var employeeHash = _utilsService.GenerateHash(rm);
 
-            var punches = await _punchRepository.GetPunches(employeeHash);
+			var punches = await _punchRepository.GetPunches(employeeHash);
 			var punchType = punches.Count() % 2 == 0 ? PunchType.In : PunchType.Out;
 
-			var punch = new Punch(punchType, employee.Hash);
+			var punch = new Punch(punchType, employeeHash);
 
 			_punchService.ValidatePunch(punch);
 

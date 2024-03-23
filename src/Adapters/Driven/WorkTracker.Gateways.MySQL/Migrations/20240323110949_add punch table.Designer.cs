@@ -11,8 +11,8 @@ using WorkTracker.Gateways.MySQL.Contexts;
 namespace WorkTracker.Gateways.MySQL.Migrations
 {
     [DbContext(typeof(ClockContext))]
-    [Migration("20240321201909_Add employee and punch tables")]
-    partial class Addemployeeandpunchtables
+    [Migration("20240323110949_add punch table")]
+    partial class addpunchtable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,28 +22,6 @@ namespace WorkTracker.Gateways.MySQL.Migrations
                 .HasDefaultSchema("Clock")
                 .HasAnnotation("ProductVersion", "7.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
-
-            modelBuilder.Entity("WorkTracker.Clock.Domain.Models.Employee", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)")
-                        .HasColumnName("Id");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("Email");
-
-                    b.Property<string>("Hash")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("Hash");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Employee", "Clock");
-                });
 
             modelBuilder.Entity("WorkTracker.Clock.Domain.Models.Punch", b =>
                 {
@@ -71,7 +49,6 @@ namespace WorkTracker.Gateways.MySQL.Migrations
                         .HasColumnName("Type");
 
                     b.Property<DateTime?>("UpdatedTimestamp")
-                        .IsRequired()
                         .HasColumnType("datetime(6)")
                         .HasColumnName("UpdatedTimestamp");
 

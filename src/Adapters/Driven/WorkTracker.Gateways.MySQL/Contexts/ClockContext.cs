@@ -15,14 +15,12 @@ namespace WorkTracker.Gateways.MySQL.Contexts
         }
 
         public DbSet<Punch> Punches { get; set; }
-        public DbSet<Employee> Employees { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("Clock");
 
             modelBuilder.ApplyConfiguration(new PunchMap());
-            modelBuilder.ApplyConfiguration(new EmployeeMap());
 
             base.OnModelCreating(modelBuilder);
         }

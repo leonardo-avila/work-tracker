@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WorkTracker.Clock.Domain.Ports;
 using WorkTracker.Clock.UseCase.OutputViewModels;
 using WorkTracker.Clock.UseCase.Ports;
 using WorkTracker.Domain.Core;
@@ -14,15 +15,18 @@ public class ReportsController : ControllerBase
     private readonly ILogger<ReportsController> _logger;
     private readonly IPunchUseCases _punchUseCases;
 
-    public ReportsController(ILogger<ReportsController> logger, IPunchUseCases punchUseCases)
+    private readonly IUtilsService _employeeService;
+
+    public ReportsController(ILogger<ReportsController> logger, IPunchUseCases punchUseCases, IUtilsService employeeService)
     {
         _logger = logger;
         _punchUseCases = punchUseCases;
+        _employeeService = employeeService;
     }
 
 
     /// <summary>
-    /// Get current day work punches for the specified employee
+    /// Get monthly punches report
     /// </summary>
     /// <returns>Returns the respective punches</returns>
     /// <response code="200">Successfully retrieved punches.</response>
@@ -35,7 +39,8 @@ public class ReportsController : ControllerBase
         try 
         {
             var rm = User.FindFirst("nickname")?.Value;
-            var punches = await _punchUseCases.GetMonthlyPunches(rm!);
+            var email = User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+            var punches = await _punchUseCases.GetMonthlyPunches(rm!, email!);
             if (punches is null) {
                 return NoContent();
             }

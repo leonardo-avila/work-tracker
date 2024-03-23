@@ -4,21 +4,24 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <NoWarn>8618</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\net6.0\WorkTracker.API.xml</DocumentationFile>
-    <NoWarn>1701;1702;1591</NoWarn>
+    <NoWarn>1701;1702;1591;8618</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\net6.0\WorkTracker.API.xml</DocumentationFile>
-    <NoWarn>1701;1702;1591</NoWarn>
+    <NoWarn>1701;1702;1591;8618</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Amazon.AspNetCore.Identity.Cognito" Version="3.0.1" />
+    <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="3.7.101.61" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.24" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
@@ -26,6 +29,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\UseCase\WorkTracker.Clock.UseCase\WorkTracker.Clock.UseCase.csproj" />
     <ProjectReference Include="..\..\Driven\WorkTracker.Gateways.MySQL\WorkTracker.Gateways.MySQL.csproj" />
+    <ProjectReference Include="..\..\Driven\WorkTracker.Gateways.Notification\WorkTracker.Gateways.Notification.csproj" />
+    <ProjectReference Include="..\..\Driven\WorkTracker.Gateways.Http\WorkTracker.Gateways.Http.csproj" />
   </ItemGroup>
 
 </Project>

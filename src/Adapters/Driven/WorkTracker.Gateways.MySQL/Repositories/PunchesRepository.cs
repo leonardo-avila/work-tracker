@@ -18,14 +18,14 @@ namespace WorkTracker.Gateways.MySQL.Repositories
 
         public async Task<IEnumerable<Punch>> GetPunches(string employeeHash)
         {
-            var currentDate = DateTime.Today;
+            var currentDate = DateTime.UtcNow.Date;
             return await DbSet.Where(x => x.EmployeeHash == employeeHash 
                 && x.Timestamp.Date == currentDate).ToListAsync();
         }
 
         public async Task<IEnumerable<Punch>> GetMonthlyPunches(string employeeHash)
         {
-            var currentDate = DateTime.Today;
+            var currentDate = DateTime.UtcNow.Date;
             var firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
             var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
             return await DbSet.Where(x => x.EmployeeHash == employeeHash 

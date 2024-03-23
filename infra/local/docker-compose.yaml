@@ -21,6 +21,12 @@ services:
             - "3000:80"
         environment:
             ConnectionStrings__DefaultConnection: "Server=worktracker-database;Port=3306;Database=worktracker;Uid=user;Pwd=uSeRpAsSwOrD"
+            Cognito__Authority: "{{ COGNITO_AUTHORITY }}"
+            Cognito__ClientId: "{{ COGNITO_CLIENT_ID }}"
+            Cognito__IdpUrl: "{{ COGNITO_IDPURL }}"
+            Mailtrap__Username: "{{ MAILTRAP_USERNAME }}"
+            Mailtrap__Password: "{{ MAILTRAP_PASSWORD }}"
+            Mailtrap__Host: "{{ MAILTRAP_HOST }}"
         depends_on:
             - worktracker-database
         networks:

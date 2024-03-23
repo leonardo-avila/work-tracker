@@ -21,3 +21,33 @@ variable "lab_account_region" {
 variable "work_tracker_image" {
   description = "Work Tracker Docker image"
 }
+
+variable "mailtrap_host" {
+  description = "Mailtrap host"
+  sensitive = true
+}
+
+variable "mailtrap_username" {
+  description = "Mailtrap username"
+  sensitive = true
+}
+
+variable "mailtrap_password" {
+  description = "Mailtrap password"
+  sensitive = true
+}
+
+variable "cognito_authority" {
+  description = "Cognito authority"
+  sensitive = true
+}
+
+variable "cognito_client_id" {
+  description = "Cognito client ID"
+  sensitive = true
+}
+
+variable "cognito_idp_url" {
+  description = "Cognito Idp Url"
+  sensitive = true
+}

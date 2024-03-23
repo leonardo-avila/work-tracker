@@ -59,3 +59,9 @@ jobs:
           TF_VAR_work_tracker_image: ${{ secrets.WORKTRACKER_IMAGE }}
           TF_VAR_mysql_password: ${{ secrets.MYSQL_PASSWORD }}
           TF_VAR_mysql_user: ${{ secrets.MYSQL_USER }}
+          TF_VAR_cognito_authority: ${{ secrets.COGNITO_AUTHORITY }}
+          TF_VAR_cognito_client_id: ${{ secrets.COGNITO_CLIENT_ID }}
+          TF_VAR_cognito_idp_url: ${{ secrets.COGNITO_IDP_URL }}
+          TF_VAR_mailtrap_host: ${{ secrets.MAILTRAP_HOST }}
+          TF_VAR_mailtrap_password: ${{ secrets.MAILTRAP_PASSWORD }}
+          TF_VAR_mailtrap_username: ${{ secrets.MAILTRAP_USERNAME }}
