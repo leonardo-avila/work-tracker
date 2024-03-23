@@ -1,4 +1,5 @@
 # Work Tracker
+[![build](https://github.com/leonardo-avila/work-tracker/actions/workflows/build.yml/badge.svg)](https://github.com/leonardo-avila/work-tracker/actions/workflows/build.yml)
 
 Simple system for clock in and out with reports. Developed in .NET 6.
 
