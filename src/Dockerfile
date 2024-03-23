@@ -11,6 +11,8 @@ COPY ["Core/Domain/WorkTracker.Clock.Domain/WorkTracker.Clock.Domain.csproj", "C
 COPY ["Core/Domain/WorkTracker.Domain.Core/WorkTracker.Domain.Core.csproj", "Core/Domain/WorkTracker.Domain.Core/"]
 COPY ["Core/Data/WorkTracker.Data.Core/WorkTracker.Data.Core.csproj", "Core/Data/WorkTracker.Data.Core/"]
 COPY ["Adapters/Driven/WorkTracker.Gateways.MySQL/WorkTracker.Gateways.MySQL.csproj", "Adapters/Driven/WorkTracker.Gateways.MySQL/"]
+COPY ["Adapters/Driven/WorkTracker.Gateways.Notification/WorkTracker.Gateways.Notification.csproj", "Adapters/Driven/WorkTracker.Gateways.Notification/"]
+COPY ["Adapters/Driven/WorkTracker.Gateways.Http/WorkTracker.Gateways.Http.csproj", "Adapters/Driven/WorkTracker.Gateways.Http/"]
 
 RUN dotnet restore "Adapters/Driver/WorkTracker.API/WorkTracker.API.csproj"
 COPY . .

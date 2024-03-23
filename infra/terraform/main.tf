@@ -8,7 +8,7 @@ terraform {
   backend "s3" {
     bucket                  = "terraform-buckets-work-tracker"
     key                     = "work-tracker/terraform.tfstate"
-    region                  = var.lab_account_region
+    region                  = "us-west-2"
   }
 }
 provider "aws" {
@@ -151,7 +151,7 @@ resource "aws_lb_listener" "work-tracker-api-lbl" {
 
 resource "aws_ecs_service" "work-tracker-service" {
   name            = "work-tracker-service"
-  cluster         = "food-totem-ecs"
+  cluster         = "work-tracker"
   task_definition = aws_ecs_task_definition.work-tracker-task.arn
   desired_count   = 1
   launch_type     = "FARGATE"
